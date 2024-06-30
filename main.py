@@ -1,3 +1,4 @@
+import logging
 from caldav import DAVClient
 import dotenv
 import os
@@ -5,6 +6,10 @@ import datetime
 import discord
 from discord import app_commands
 from icalendar import Calendar
+
+# Configure logging
+logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s',
+                    level=logging.DEBUG)
 
 dotenv.load_dotenv()
 
@@ -32,6 +37,7 @@ calendars = principal.calendars()
 @client.event
 async def on_ready():
     await tree.sync(guild=discord.Object(id=os.getenv("GUILD_ID")))
+    logging.info(f'{client.user} has connected to Discord!')
     print(f'{client.user} has connected to Discord!')
 
 
@@ -41,11 +47,10 @@ async def on_ready():
     guild=discord.Object(id=os.getenv("GUILD_ID"))
 )
 async def calendar_list(interaction):
-    print(calendars)
-
-    print([calendar.name for calendar in calendars])
-
+    logging.info('Executing calendar_list command')
+    print('Executing calendar_list command')
     await interaction.response.send_message([calendar.name for calendar in calendars])
+
 
 @tree.command(
     name="events",
@@ -53,6 +58,8 @@ async def calendar_list(interaction):
     guild=discord.Object(id=os.getenv("GUILD_ID"))
 )
 async def event_list(interaction, calendar_name: str, till_days: int):
+    logging.info(f'Executing event_list command for calendar: {calendar_name} and days: {till_days}')
+    print(f'Executing event_list command for calendar: {calendar_name} and days: {till_days}')
     calendar = [calendar for calendar in calendars if calendar.name == calendar_name][0]
 
     start_date = datetime.datetime.now()

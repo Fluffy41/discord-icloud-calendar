@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  web:
+    image: python:3.12.4-slim
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: python main.py

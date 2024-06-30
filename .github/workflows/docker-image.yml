@@ -25,10 +25,10 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build Docker image
-      run: docker build . -t my-image-name:latest
+      run: docker build . -t discord-icloud-calendar:latest
 
     - name: Run Docker container
-      run: docker run --env-file .env my-image-name:latest
+      run: docker run --env-file .env discord-icloud-calendar:latest
 
     - name: Run Python script
       env:
@@ -42,5 +42,5 @@ jobs:
       if: success()
       run: |
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker tag my-image-name:latest "${{ secrets.DOCKER_USERNAME }}/my-image-name:latest"
-        docker push "${{ secrets.DOCKER_USERNAME }}/my-image-name:latest"
+        docker tag discord-icloud-calendar:latest "${{ secrets.DOCKER_USERNAME }}/discord-icloud-calendar:latest"
+        docker push "${{ secrets.DOCKER_USERNAME }}/discord-icloud-calendar:latest"

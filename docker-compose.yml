@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    image: python:3.12.4-slim
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: python main.py
+    environment:
+      - ICLOUD_USERNAME=${{ secrets.ICLOUD_USERNAME }}
+      - ICLOUD_PASSWORD=${{ secrets.ICLOUD_PASSWORD }}
+      - DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+      - GUILD_ID=${{ secrets.GUILD_ID }}

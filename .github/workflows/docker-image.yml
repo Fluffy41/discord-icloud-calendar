@@ -20,7 +20,10 @@ jobs:
         docker build . -t fluffy41/discord-icloud-calendar:latest
 
     - name: Log in to Docker Hub
-      run: docker login -u fluffy41 -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      env:
+        DOCKER_USERNAME: fluffy41
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
     - name: Push Docker image to Docker Hub
       run: docker push fluffy41/discord-icloud-calendar:latest

@@ -1,20 +1,17 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8-slim
+# Use an appropriate Python base image for ARM
+FROM arm32v7/python:3.8-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Install build essentials including GCC
-RUN apt-get update && apt-get install -y gcc
-
-# Copy the requirements.txt file into the container at /app
-COPY requirements.txt /app/
+# Copy requirements.txt to the working directory
+COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy your main.py script into the container at /app
-COPY main.py /app/
+# Copy the rest of the application code to the working directory
+COPY . .
 
-# Run main.py when the container launches
+# Command to run your application
 CMD ["python", "main.py"]

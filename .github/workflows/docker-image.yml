@@ -14,33 +14,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Python environment
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Build Docker image
-      run: docker build . -t discord-icloud-calendar:latest
-
-    - name: Run Docker container
-      run: docker run --env-file .env discord-icloud-calendar:latest
-
-    - name: Run Python script
+    - name: Build and push Docker image
       env:
-        ICLOUD_USERNAME: ${{ secrets.ICLOUD_USERNAME }}
-        ICLOUD_PASSWORD: ${{ secrets.ICLOUD_PASSWORD }}
-        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-        GUILD_ID: ${{ secrets.GUILD_ID }}
-      run: python main.py
-
-    - name: Push Docker image to Docker Hub
-      if: success()
+        DOCKER_USERNAME: fluffy41
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker tag discord-icloud-calendar:latest "${{ secrets.DOCKER_USERNAME }}/discord-icloud-calendar:latest"
-        docker push "${{ secrets.DOCKER_USERNAME }}/discord-icloud-calendar:latest"
+        docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_USERNAME/discord-icloud-calendar:latest .
+        echo "${DOCKER_ACCESS_TOKEN}" | docker login --username $DOCKER_USERNAME --password-stdin
+        docker push $DOCKER_USERNAME/discord-icloud-calendar:latest

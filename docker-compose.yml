@@ -7,8 +7,3 @@ services:
     volumes:
       - .:/usr/src/app
     command: python main.py
-    environment:
-      - ICLOUD_USERNAME=${{ secrets.ICLOUD_USERNAME }}
-      - ICLOUD_PASSWORD=${{ secrets.ICLOUD_PASSWORD }}
-      - DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
-      - GUILD_ID=${{ secrets.GUILD_ID }}

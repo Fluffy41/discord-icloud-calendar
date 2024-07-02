@@ -152,7 +152,7 @@ async def live_calendar(interaction, calendar_name: str):
         channel = client.get_channel(channel_id)
         message = await channel.fetch_message(message_id_live_calendar)
         await message.delete()
-        await interaction.response.send("Live calendar stopped", delete_after=5)
+        await interaction.response.send_message(content="Live calendar stopped", delete_after=5)
 
 
 @tasks.loop(seconds=300)

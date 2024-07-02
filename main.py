@@ -134,7 +134,7 @@ live_calendar_status = False
 )
 async def live_calendar(interaction, calendar_name: str):
     global live_calendar_status
-    message_id = None
+    global message_id_live_calendar
     calendar_name = calendar_name.split(", ")
     print(f"Executing live_calendar command for {calendar_name}")
     if not live_calendar_status:
@@ -143,14 +143,14 @@ async def live_calendar(interaction, calendar_name: str):
         channel_id = interaction.channel_id
         channel = client.get_channel(channel_id)
         message = await channel.send(content="None")
-        message_id = message.id
-        calendar_refresher.start(calendar_name, message_id, channel)
+        message_id_live_calendar = message.id
+        calendar_refresher.start(calendar_name, message_id_live_calendar, channel)
     else:
         live_calendar_status = False
         calendar_refresher.stop()
         channel_id = interaction.channel_id
         channel = client.get_channel(channel_id)
-        message = await channel.fetch_message(message_id)
+        message = await channel.fetch_message(message_id_live_calendar)
         await message.delete()
         await interaction.response.send("Live calendar stopped", delete_after=5)
 
@@ -175,7 +175,7 @@ async def calendar_refresher(calendar_name, message_id, channel):
         unix_timestamp_start = int(event_start.timestamp())
         unix_timestamp_end = int(event_end.timestamp())
 
-        event_beautiful = f"Upcoming event in {calendar_name}:\n {events_list[0]['event_name']} \n begins in <t:{unix_timestamp_start}:R> \n <t:{unix_timestamp_start}:f> - <t:{unix_timestamp_end}:f> \n\n"
+        event_beautiful = f"Upcoming event in {calendar_name}:\n {events_list[0]['event_name']} \n begins: <t:{unix_timestamp_start}:R> (<t:{unix_timestamp_start}:f>) \n ends: <t:{unix_timestamp_end}:R> <t:{unix_timestamp_end}:f> \n\n"
 
         await message.edit(content=event_beautiful)
 

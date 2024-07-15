@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     image: python:3.12.4-slim
-    working_dir: /usr/src/app
+    working_dir: /app
     volumes:
-      - .:/usr/src/app
+      - .:/app
     command: python main.py
